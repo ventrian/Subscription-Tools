@@ -1,0 +1,48 @@
+﻿DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport1
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport1
+	@PortalID int ,
+	@ModuleID int, 
+	@DateStart	DateTime,
+	@DateEnd	DateTime 
+AS
+
+DECLARE @MonthForwardCounter int
+DECLARE @MonthForwardDate DateTime
+DECLARE @SQL nvarchar(4000)
+SET @SQL = ' SELECT ''Total Memberships                                 '' as Role, '
+SET @MonthForwardCounter = 0
+WHILE @MonthForwardCounter <13
+BEGIN
+   SET @MonthForwardDate = DateAdd(month,@MonthForwardCounter,GetDate())
+   SET @SQL = @SQL + ' SUM(CASE WHEN Month(DateEnd) =' + Cast(Month(@MonthForwardDate) as varchar(2)) 
+   SET @SQL = @SQL + ' AND Year(DateEnd) =' + Cast(Year(@MonthForwardDate) as varchar(4)) + ' and DateEnd > GetDate() '
+   SET @SQL = @SQL + ' THEN 1 ELSE 0 END) as ' + Substring(DateName(m,@MonthForwardDate),0,4) + Substring(Cast(Year(@MonthForwardDate) as varchar(4)),3,2) + ','
+   SET @MonthForwardCounter = @MonthForwardCounter + 1
+END
+SET @SQL = Substring(@SQL,0,LEN(@SQL))
+SET @SQL = @SQL + ' INTO #Subs'
+SET @SQL = @SQL + ' FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt '
+SET @SQL = @SQL + ' WHERE PortalID = ' + Cast(@PortalID as varchar) + ' and (ModuleID is null or ModuleID = ' + Cast(@ModuleID as varchar) + '); '
+
+SET @SQL = @SQL + ' INSERT INTO #Subs'
+SET @SQL = @SQL + ' SELECT Name as Role, '
+SET @MonthForwardCounter = 0
+WHILE @MonthForwardCounter <13
+BEGIN
+   SET @MonthForwardDate = DateAdd(month,@MonthForwardCounter,GetDate())
+   SET @SQL = @SQL + ' SUM(CASE WHEN Month(DateEnd) =' + Cast(Month(@MonthForwardDate) as varchar(2)) 
+   SET @SQL = @SQL + ' AND Year(DateEnd) =' + Cast(Year(@MonthForwardDate) as varchar(4)) + ' and DateEnd > GetDate() '
+   SET @SQL = @SQL + ' THEN 1 ELSE 0 END) as ' + Substring(DateName(m,@MonthForwardDate),0,4) + Substring(Cast(Year(@MonthForwardDate) as varchar(4)),3,2) + ','
+   SET @MonthForwardCounter = @MonthForwardCounter + 1
+END
+SET @SQL = Substring(@SQL,0,LEN(@SQL))
+SET @SQL = @SQL + ' FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt '
+SET @SQL = @SQL + ' WHERE PortalID = ' + Cast(@PortalID as varchar) + ' and (ModuleID is null or ModuleID = ' + Cast(@ModuleID as varchar) + ') ' 
+SET @SQL = @SQL + ' GROUP BY Name;'
+
+SET @SQL = @SQL + ' SELECT * FROM #Subs;'
+
+EXEC sp_executesql @SQL
+GO

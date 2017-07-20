@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" />
+                            <xsd:attribute name="type" type="xsd:string" />
+                            <xsd:attribute name="mimetype" type="xsd:string" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="ResMimeType">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="Version">
+        <value>1.0.0.0</value>
+    </resheader>
+    <resheader name="Reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="Writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+	<data name="SubscribedTo.Text">
+		<value>You are currently subscribed to [PLANS].</value>
+	</data>
+	<data name="Pending.Text">
+		<value>Your access is currently pending.</value>
+	</data>
+	<data name="Extend.Text">
+		<value>Click &lt;a href='[LINK]'&gt;here&lt;/a&gt; to extend.</value>
+	</data>
+	<data name="Renew.Text">
+		<value>Click &lt;a href='[LINK]'&gt;here&lt;/a&gt; to renew.</value>
+	</data>
+	<data name="ExpiresIn.Text">
+		<value>Your access expires in [DAYS] days.</value>
+	</data>
+	<data name="Expired.Text">
+		<value>Your access to [PLAN] has expired.</value>
+	</data>
+	<data name="Refresh.Text">
+		<value>Payment may take a few minutes to process, click here to &lt;a href='[LINK]'&gt;refresh&lt;/a&gt;</value>
+	</data>
+	<data name="Receipts.Text">
+		<value>Receipts</value>
+	</data>
+	<data name="Reminders.Text">
+		<value>Reminders</value>
+	</data>
+	<data name="ViewInvoice.Text">
+		<value>View Invoice</value>
+	</data>
+	<data name="ReminderNotification.Text">
+		<value>Do you want to be notified when a subscription is close to expiration?</value>
+	</data>
+</root>

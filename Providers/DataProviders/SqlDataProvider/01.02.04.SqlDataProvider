@@ -1,0 +1,16 @@
+﻿INSERT INTO 
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Content(ModuleID, SettingName, SettingValue)
+SELECT     
+	ms.ModuleID, ms.SettingName, ms.SettingValue 
+FROM         
+	{databaseOwner}{objectQualifier}DesktopModules dm, {databaseOwner}{objectQualifier}ModuleDefinitions md, {databaseOwner}{objectQualifier}Modules m, {databaseOwner}{objectQualifier}ModuleSettings ms
+WHERE     
+	(dm.ModuleName = 'SubscriptionStatus')
+	and
+	(md.DesktopModuleID = dm.DesktopModuleID)
+	and
+	(md.ModuleDefID = m.ModuleDefID)
+	and
+	(m.ModuleID = ms.ModuleID)
+GO
+	

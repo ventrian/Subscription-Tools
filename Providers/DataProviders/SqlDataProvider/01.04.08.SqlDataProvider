@@ -1,0 +1,42 @@
+﻿ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItem ADD
+	ServiceFee money NULL
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItemAdd 
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItemAdd 
+	@OrderID int,
+	@PlanID int,
+	@ServiceFee money 
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItem (
+	[OrderID],
+	[PlanID],
+	[ServiceFee]
+) VALUES (
+	@OrderID,
+	@PlanID,
+	@ServiceFee 
+)
+
+select SCOPE_IDENTITY()
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItemList 
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItemList
+	@OrderID int 
+AS
+
+SELECT
+	[OrderItemID],
+	[OrderID],
+	[PlanID],
+	[ServiceFee] 
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItem
+WHERE
+	[OrderID] = @OrderID 
+GO

@@ -1,0 +1,41 @@
+﻿DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptList
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptList
+	@PortalID int,
+	@UserID int,
+	@UserName nvarchar(255)   
+AS
+
+SELECT     
+	r.ReceiptID, 
+	r.UserID, 
+	r.PortalID, 
+	r.DateCreated, 
+	r.DateStart, 
+	r.DateEnd, 
+	r.Status, 
+	r.Name, 
+	r.ServiceFee, 
+	r.BillingPeriod, 
+	r.BillingFrequency, 
+	r.Processor, 
+    r.ProcessorTxID, 
+	r.ReminderSent, 
+	u.FirstName, 
+	u.LastName, 
+	u.UserName, 
+	u.Email
+
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r LEFT OUTER JOIN
+        	{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE 
+	(@UserID is null OR r.[UserID] = @UserID)
+	and
+	(@UserName is null OR u.[UserName] = @UserName) 
+	and 
+	r.[PortalID] = @PortalID 
+ORDER BY 
+	r.DateCreated DESC
+GO

@@ -1,0 +1,86 @@
+﻿CREATE TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Order (
+	[OrderID] [int] IDENTITY (1, 1) NOT NULL ,
+	[PortalID] [int] NOT NULL ,
+	[UserID] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItem (
+	[OrderItemID] [int] IDENTITY (1, 1) NOT NULL ,
+	[OrderID] [int] NOT NULL ,
+	[PlanID] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Order ADD 
+	CONSTRAINT [PK_{objectQualifier}DnnForge_SubscriptionTools_Order] PRIMARY KEY  CLUSTERED 
+	(
+		[OrderID]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItem ADD 
+	CONSTRAINT [PK_{objectQualifier}Ventrian_SubscriptionTools_OrderItem] PRIMARY KEY  CLUSTERED 
+	(
+		[OrderItemID]
+	)  ON [PRIMARY] 
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderAdd
+	@PortalID int,
+	@UserID int
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Order (
+	[PortalID],
+	[UserID]
+) VALUES (
+	@PortalID,
+	@UserID
+)
+
+select SCOPE_IDENTITY()
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderGet
+	@OrderID int
+	
+AS
+
+SELECT
+	[OrderID],
+	[PortalID],
+	[UserID]
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Order
+WHERE
+	[OrderID] = @OrderID
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItemAdd
+	@OrderID int,
+	@PlanID int
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItem (
+	[OrderID],
+	[PlanID]
+) VALUES (
+	@OrderID,
+	@PlanID
+)
+
+select SCOPE_IDENTITY()
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItemList
+	@OrderID int 
+AS
+
+SELECT
+	[OrderItemID],
+	[OrderID],
+	[PlanID]
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderItem
+WHERE
+	[OrderID] = @OrderID 
+GO

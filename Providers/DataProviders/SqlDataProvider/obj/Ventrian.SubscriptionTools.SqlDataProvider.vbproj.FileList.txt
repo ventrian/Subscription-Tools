@@ -1,0 +1,7 @@
+obj\Debug\ResolveAssemblyReference.cache
+..\..\..\..\..\bin\Ventrian.SubscriptionTools.SqlDataProvider.dll
+..\..\..\..\..\bin\Ventrian.SubscriptionTools.SqlDataProvider.pdb
+..\..\..\..\..\bin\DnnForge.SubscriptionTools.SqlDataProvider.xml
+obj\Debug\Ventrian.SubscriptionTools.SqlDataProvider.dll
+obj\Debug\DnnForge.SubscriptionTools.SqlDataProvider.xml
+obj\Debug\Ventrian.SubscriptionTools.SqlDataProvider.pdb

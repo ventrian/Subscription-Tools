@@ -1,0 +1,197 @@
+﻿if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport2') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport2
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport2
+	@PortalID 	int,
+	@ModuleID	int, 
+	@DateStart	DateTime,
+	@DateEnd	DateTime 
+AS
+
+CREATE TABLE #Aggregates
+             (
+              RowText VARCHAR(50),
+              ColumnText VARCHAR(50),
+              CellData MONEY
+             )
+
+INSERT INTO #Aggregates
+            (
+             RowText,
+             ColumnText,
+             CellData
+            )
+SELECT      [Name],
+            CAST(CAST(YEAR(DateStart) as varchar) + '-' + CAST(MONTH(DateStart) as varchar) + '-1' as DateTime),
+            COUNT(*)
+FROM        {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt
+WHERE	    PortalID = @PortalID and (ModuleID is null or ModuleID = @ModuleID) and (@DateStart is null or @DateStart < DateStart) and (@DateEnd is null or @DateEnd > DateStart)
+GROUP BY    [Name], CAST(CAST(YEAR(DateStart) as varchar) + '-' + CAST(MONTH(DateStart) as varchar) + '-1' as DateTime)
+ORDER BY  	CAST(CAST(YEAR(DateStart) as varchar) + '-' + CAST(MONTH(DateStart) as varchar) + '-1' as DateTime) ASC
+
+CREATE TABLE #Columns
+            (
+             ColumnIndex INT IDENTITY (0, 1),
+             ColumnText VARCHAR(50)
+             )
+ 
+INSERT INTO     #Columns
+                (
+                 ColumnText
+                )
+SELECT  CAST(ColumnText as DateTime)
+FROM           #Aggregates 
+GROUP BY  CAST(ColumnText as DateTime)
+ 
+CREATE TABLE #Rows 
+             (
+              RowText VARCHAR(50)
+             )
+ 
+INSERT INTO    #Rows
+                (
+                 RowText
+                )
+
+SELECT DISTINCT RowText
+FROM            #Aggregates
+ 
+DECLARE     @ColumnIndex INT,
+            @MaxColumnIndex INT,
+            @ColumnText VARCHAR(50),
+            @SQL VARCHAR(1000)
+ 
+SELECT      @ColumnIndex = 0,
+            @MaxColumnIndex = MAX(ColumnIndex)
+FROM        #Columns
+ 
+
+WHILE @ColumnIndex <= @MaxColumnIndex
+   BEGIN
+      SELECT     @ColumnText = ColumnText
+      FROM       #Columns
+      WHERE      ColumnIndex = @ColumnIndex
+ 
+      SELECT     @SQL = 'ALTER TABLE #Rows ADD ' + QUOTENAME(DateName(month, CAST(@ColumnText as DateTime)) + ', ' + DateName(year, CAST(@ColumnText as DateTime))) + ' INT NULL DEFAULT 0'
+      EXEC       (@SQL)
+ 
+      SELECT     @SQL = 'UPDATE #Rows SET ' + QUOTENAME(DateName(month, CAST(@ColumnText as DateTime)) + ', ' + DateName(year, CAST(@ColumnText as DateTime))) + ' = #Aggregates.CellData
+                         FROM #Aggregates
+								    , #Columns 
+								 WHERE #Rows.RowText = #Aggregates.RowText 
+								 AND #Columns.ColumnText = #Aggregates.ColumnText 
+								 AND #Columns.ColumnIndex = ' + CAST(@ColumnIndex AS VARCHAR(12))
+      EXEC       (@SQL)
+ 
+      SELECT  @ColumnIndex = @ColumnIndex + 1 
+   END
+
+DROP TABLE #Columns
+DROP TABLE #Aggregates
+
+SELECT     #Rows.*
+FROM        #Rows
+ORDER BY   #Rows.RowText
+
+DROP TABLE  #Rows
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport4') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport4
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport4
+	@PortalID int,
+	@ModuleID	int, 
+	@DateStart	DateTime,
+	@DateEnd	DateTime 
+AS
+
+CREATE TABLE #Aggregates
+             (
+              RowText VARCHAR(50),
+              ColumnText VARCHAR(50),
+              CellData MONEY
+             )
+
+INSERT INTO #Aggregates
+            (
+             RowText,
+             ColumnText,
+             CellData
+            )
+SELECT '', Name, COUNT(*)
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt
+WHERE (DateEnd > GETDATE()) and (PortalID = @PortalID) and (ModuleID is null or ModuleID = @ModuleID) 
+GROUP BY Name
+
+CREATE TABLE #Columns
+            (
+             ColumnIndex INT IDENTITY (0, 1),
+             ColumnText VARCHAR(50)
+             )
+ 
+INSERT INTO     #Columns
+                (
+                 ColumnText
+                )
+SELECT  ColumnText
+FROM           #Aggregates 
+GROUP BY  ColumnText
+ 
+CREATE TABLE #Rows 
+             (
+              RowText VARCHAR(50)
+             )
+ 
+INSERT INTO    #Rows
+                (
+                 RowText
+                )
+
+SELECT DISTINCT RowText
+FROM            #Aggregates 
+ 
+DECLARE     @ColumnIndex INT,
+            @MaxColumnIndex INT,
+            @ColumnText VARCHAR(50),
+            @SQL VARCHAR(1000)
+ 
+SELECT      @ColumnIndex = 0,
+            @MaxColumnIndex = MAX(ColumnIndex)
+FROM        #Columns
+ 
+
+WHILE @ColumnIndex <= @MaxColumnIndex
+   BEGIN
+      SELECT     @ColumnText = ColumnText
+      FROM       #Columns
+      WHERE      ColumnIndex = @ColumnIndex
+
+      SELECT     @SQL = 'ALTER TABLE #Rows ADD ' + QUOTENAME(@ColumnText) + ' INT NULL DEFAULT 0'
+      EXEC       (@SQL)
+ 
+      SELECT     @SQL = 'UPDATE #Rows SET ' + QUOTENAME(@ColumnText) + ' = #Aggregates.CellData
+                         FROM #Aggregates 
+								    , #Columns  
+								 WHERE #Rows.RowText = #Aggregates.RowText 
+								 AND #Columns.ColumnText = #Aggregates.ColumnText 
+								 AND #Columns.ColumnIndex = ' + CAST(@ColumnIndex AS VARCHAR(12))
+      EXEC       (@SQL)
+ 
+      SELECT  @ColumnIndex = @ColumnIndex + 1 
+   END
+
+DROP TABLE #Columns
+DROP TABLE #Aggregates
+
+SELECT     @SQL = 'ALTER TABLE #Rows DROP COLUMN ' + QUOTENAME('RowText')
+EXEC       (@SQL)
+
+SELECT     #Rows.*
+FROM        #Rows
+
+DROP TABLE  #Rows
+GO
+

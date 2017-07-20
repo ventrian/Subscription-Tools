@@ -1,0 +1,47 @@
+﻿DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptListExpired
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptListExpired
+	@PortalID int,
+	@ModuleID int, 
+	@DatePeriod DateTime,
+	@DateFrequency DateTime  
+AS
+
+SELECT
+	r.[ReceiptID],
+	r.[UserID],
+	r.[PortalID],
+	r.[ModuleID], 
+	r.[DateCreated],
+	r.[DateStart],
+	r.[DateEnd],
+	r.[Status],
+	r.[Name],
+	r.[ServiceFee],
+	r.[BillingPeriod],
+	r.[BillingFrequency],
+	r.[Processor], 
+	r.[ProcessorTxID],
+	u.[FirstName],
+	u.[LastName],
+	u.[UserName],
+	u.[Email]    
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r LEFT OUTER JOIN
+		{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE 
+	r.[PortalID] = @PortalID
+	and
+	(r.[ModuleID] is null or r.[ModuleID] = @ModuleID) 
+	and
+	r.[DateEnd] < @DatePeriod  
+	and
+	r.[DateEnd] > GetDate() 
+	and
+	r.[ReceiptID] = (select top 1 ReceiptID from {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r2 where r.userid = r2.userid order by DateCreated DESC)
+	and
+	r.[ReceiptID] not in (SELECT TOP 1 ReceiptID from {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Reminder r3 where r.ReceiptID = r3.ReceiptID and DateSent > @DateFrequency ORDER BY DateSent DESC)
+ORDER BY 
+	DateCreated DESC
+GO

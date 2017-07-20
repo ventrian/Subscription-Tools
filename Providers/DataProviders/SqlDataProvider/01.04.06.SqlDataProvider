@@ -1,0 +1,148 @@
+﻿ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan ADD
+	EndDate datetime NULL
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanAdd
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanAdd
+	@PortalID int,
+	@ModuleID int, 
+	@RoleID int,
+	@Name nvarchar(50),
+	@Description nvarchar(255),
+	@IsActive bit,
+	@ViewOrder int,
+	@ServiceFee money,
+	@BillingFrequency int,
+	@BillingPeriod int,
+	@Currency nvarchar(50),
+	@EndDate datetime 
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan (
+	[PortalID],
+	[ModuleID], 
+	[RoleID],
+	[Name],
+	[Description],
+	[IsActive],
+	[ViewOrder],
+	[ServiceFee],
+	[BillingFrequency],
+	[BillingPeriod],
+	[Currency],
+	[EndDate] 
+) VALUES (
+	@PortalID,
+	@ModuleID, 
+	@RoleID,
+	@Name,
+	@Description,
+	@IsActive,
+	@ViewOrder,
+	@ServiceFee,
+	@BillingFrequency,
+	@BillingPeriod,
+	@Currency,
+	@EndDate 
+)
+
+select SCOPE_IDENTITY()
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanGet
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanGet
+	@PlanID int 
+AS
+
+SELECT
+	[PlanID],
+	[RoleID],
+	[PortalID],
+	[ModuleID], 
+	[Name],
+	[Description],
+	[ServiceFee],
+	[BillingFrequency],
+	[BillingPeriod],
+	[IsActive],
+	[Currency],
+	[EndDate] 
+FROM 
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan
+WHERE
+	PlanID = @PlanID
+ORDER BY
+	[Name]
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanList
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanList
+	@PortalID int,
+	@ModuleID int 
+AS
+
+SELECT
+	[PlanID],
+	[RoleID],
+	[PortalID],
+	[ModuleID], 
+	[Name],
+	[Description],
+	[ServiceFee],
+	[BillingFrequency],
+	[BillingPeriod],
+	[IsActive],
+	[ViewOrder],
+	[Currency],
+	[EndDate]  
+FROM 
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan
+WHERE
+	PortalID = @PortalID
+	and
+	(ModuleID is null or ModuleID = @ModuleID) 
+ORDER BY
+	[ViewOrder] ASC, [Name]
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanUpdate
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanUpdate
+	@PlanID int, 
+	@PortalID int, 
+	@ModuleID int, 
+	@RoleID int, 
+	@Name nvarchar(50), 
+	@Description nvarchar(255), 
+	@IsActive bit, 
+	@ViewOrder int, 
+	@ServiceFee money, 
+	@BillingFrequency int, 
+	@BillingPeriod int,
+	@Currency nvarchar(50),
+	@EndDate datetime  
+AS
+
+UPDATE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan SET
+	[PortalID] = @PortalID,
+	[ModuleID] = @ModuleID, 
+	[RoleID] = @RoleID,
+	[Name] = @Name,
+	[Description] = @Description,
+	[IsActive] = @IsActive,
+	[ViewOrder] = @ViewOrder,
+	[ServiceFee] = @ServiceFee,
+	[BillingFrequency] = @BillingFrequency,
+	[BillingPeriod] = @BillingPeriod,
+	[Currency] = @Currency,
+	[EndDate] = @EndDate 
+WHERE
+	[PlanID] = @PlanID
+GO

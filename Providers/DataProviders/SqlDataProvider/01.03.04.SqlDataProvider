@@ -1,0 +1,333 @@
+﻿ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt
+	DROP CONSTRAINT DF_{objectQualifier}DnnForge_SubscriptionTools_Receipt_ReminderSent
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt
+	DROP COLUMN ReminderSent
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptAdd
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptAdd
+	@PortalID int,
+	@UserID int,
+	@DateCreated datetime,
+	@DateStart datetime,
+	@DateEnd datetime,
+	@Status nvarchar(255),
+	@Name nvarchar(50), 
+	@ServiceFee money,
+	@BillingPeriod int, 
+	@BillingFrequency int, 
+	@Processor nvarchar(50),
+	@ProcessorTxID nvarchar(50)
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt (
+	[PortalID],
+	[UserID],
+	[DateCreated],
+	[DateStart],
+	[DateEnd],
+	[Status],
+	[Name], 
+	[ServiceFee],
+	[BillingPeriod],
+	[BillingFrequency],
+	[Processor],
+	[ProcessorTxID]
+) VALUES (
+	@PortalID, 
+	@UserID,
+	@DateCreated,
+	@DateStart,
+	@DateEnd,
+	@Status,
+	@Name,
+	@ServiceFee,
+	@BillingPeriod,
+	@BillingFrequency, 
+	@Processor,
+	@ProcessorTxID
+)
+
+select SCOPE_IDENTITY()
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptGet
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptGet
+	@ReceiptID int
+AS
+
+SELECT
+r.[ReceiptID],
+	r.[UserID],
+	r.[PortalID],
+	r.[DateCreated],
+	r.[DateStart],
+	r.[DateEnd],
+	r.[Status],
+	r.[Name],
+	r.[ServiceFee],
+	r.[BillingPeriod],
+	r.[BillingFrequency],
+	r.[Processor], 
+	r.[ProcessorTxID],
+	u.[FirstName],
+	u.[LastName],
+	u.[UserName],
+	u.[Email]    
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r INNER JOIN
+		{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE
+	r.[ReceiptID] = @ReceiptID
+
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptList
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptList
+	@PortalID int,
+	@UserID int,
+	@UserName nvarchar(255)  
+AS
+
+SELECT     
+	r.ReceiptID, 
+	r.UserID, 
+	r.PortalID, 
+	r.DateCreated, 
+	r.DateStart, 
+	r.DateEnd, 
+	r.Status, 
+	r.Name, 
+	r.ServiceFee, 
+	r.BillingPeriod, 
+	r.BillingFrequency, 
+	r.Processor, 
+    r.ProcessorTxID, 
+	u.FirstName, 
+	u.LastName, 
+	u.UserName, 
+	u.Email
+
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r LEFT OUTER JOIN
+        	{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE 
+	(@UserID is null OR r.[UserID] = @UserID)
+	and
+	(@UserName is null OR u.[UserName] = @UserName) 
+	and 
+	r.[PortalID] = @PortalID 
+ORDER BY 
+	r.DateCreated DESC
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptUpdate
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptUpdate
+	@ReceiptID int, 
+	@PortalID int, 
+	@UserID int, 
+	@DateCreated datetime, 
+	@DateStart datetime, 
+	@DateEnd datetime, 
+	@Status nvarchar(255), 
+	@Name nvarchar(50),
+	@ServiceFee money,
+	@BillingPeriod int,
+	@BillingFrequency int , 
+	@Processor nvarchar(50),
+	@ProcessorTxID nvarchar(50)
+AS
+
+UPDATE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt SET
+	[UserID] = @UserID,
+	[PortalID] = @PortalID, 
+	[DateCreated] = @DateCreated,
+	[DateStart] = @DateStart,
+	[DateEnd] = @DateEnd,
+	[Status] = @Status,
+	[Name] = @Name, 
+	[ServiceFee] = @ServiceFee,
+	[BillingPeriod] = @BillingPeriod,
+	[BillingFrequency] = @BillingFrequency,
+	[Processor] = @Processor, 
+	[ProcessorTxID] = @ProcessorTxID
+WHERE
+	[ReceiptID] = @ReceiptID
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_AddScheduleItemSetting
+	@ScheduleID     int,
+	@Name           nvarchar(50),
+	@Value			nvarchar(256)
+as
+
+IF EXISTS ( SELECT * FROM {databaseOwner}{objectQualifier}ScheduleItemSettings WHERE ScheduleID = @ScheduleID AND SettingName = @Name)
+BEGIN 
+	UPDATE	{databaseOwner}{objectQualifier}ScheduleItemSettings
+	SET		SettingValue = @Value
+	WHERE	ScheduleID = @ScheduleID
+	AND		SettingName = @Name
+END 
+ELSE 
+BEGIN 
+	INSERT INTO {databaseOwner}{objectQualifier}ScheduleItemSettings (
+		ScheduleID,
+		SettingName,
+		Settingvalue
+	)
+	VALUES (
+		@ScheduleID,
+		@Name,
+		@Value
+	)
+END
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptListExpired
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptListExpired
+	@PortalID int,
+	@DatePeriod DateTime,
+	@DateFrequency DateTime  
+AS
+
+SELECT
+	r.[ReceiptID],
+	r.[UserID],
+	r.[PortalID],
+	r.[DateCreated],
+	r.[DateStart],
+	r.[DateEnd],
+	r.[Status],
+	r.[Name],
+	r.[ServiceFee],
+	r.[BillingPeriod],
+	r.[BillingFrequency],
+	r.[Processor], 
+	r.[ProcessorTxID],
+	u.[FirstName],
+	u.[LastName],
+	u.[UserName],
+	u.[Email]    
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r LEFT OUTER JOIN
+		{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE 
+	r.[PortalID] = 0 
+	and
+	r.[DateEnd] > GetDate()
+	and
+	r.[DateEnd] < @DatePeriod
+	and
+	r.[ReceiptID] = (select top 1 ReceiptID from {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r2 where r.userid = r2.userid order by DateCreated DESC)
+	and
+	r.[ReceiptID] not in (SELECT TOP 1 ReceiptID from {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Reminder r3 where r.ReceiptID = r3.ReceiptID and DateSent > @DateFrequency ORDER BY DateSent DESC)
+ORDER BY 
+	DateCreated DESC
+GO
+
+CREATE TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Reminder (
+	[ReminderID] [int] IDENTITY (1, 1) NOT NULL ,
+	[ReceiptID] [int] NOT NULL ,
+	[DateSent] [datetime] NOT NULL 
+) ON [PRIMARY]
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Reminder ADD 
+	CONSTRAINT [DF_{objectQualifier}DnnForge_SubscriptionTools_Reminder_DateSent] DEFAULT (getdate()) FOR [DateSent],
+	CONSTRAINT [PK_{objectQualifier}DnnForge_SubscriptionTools_Reminder] PRIMARY KEY  CLUSTERED 
+	(
+		[ReminderID]
+	)  ON [PRIMARY] 
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReminderAdd
+	@ReceiptID int,
+	@DateSent datetime
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Reminder (
+	[ReceiptID],
+	[DateSent]
+) VALUES (
+	@ReceiptID, 
+	@DateSent
+)
+
+select SCOPE_IDENTITY()
+GO
+
+CREATE TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_UserSetting (
+	[UserSettingID] [int] IDENTITY (1, 1) NOT NULL ,
+	[UserID] [int] NOT NULL ,
+	[SettingName] [nvarchar] (255) NOT NULL ,
+	[SettingValue] [nvarchar] (2000) NOT NULL 
+) ON [PRIMARY]
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_UserSetting ADD 
+	CONSTRAINT [PK_{objectQualifier}DnnForge_SubscriptionTools_UserSetting] PRIMARY KEY  CLUSTERED 
+	(
+		[UserSettingID]
+	)  ON [PRIMARY] 
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_UserSettingAdd
+	@UserID int,
+	@SettingName nvarchar(50),
+	@SettingValue ntext
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_UserSetting (
+	[UserID],
+	[SettingName],
+	[SettingValue]
+) VALUES (
+	@UserID,
+	@SettingName,
+	@SettingValue
+)
+
+select SCOPE_IDENTITY()
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_UserSettingGet
+	@UserID int,
+	@SettingName nvarchar(50) 
+AS
+
+SELECT
+	[UserID],
+	[SettingName],
+	[SettingValue]
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_UserSetting
+WHERE
+	[UserID] = @UserID
+	and
+	[SettingName] = @SettingName 
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_UserSettingUpdate
+	@UserID int, 
+	@SettingName nvarchar(50), 
+	@SettingValue ntext 
+AS
+
+UPDATE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_UserSetting SET
+	[UserID] = @UserID,
+	[SettingName] = @SettingName,
+	[SettingValue] = @SettingValue
+WHERE
+	[UserID] = @UserID
+GO

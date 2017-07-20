@@ -1,0 +1,366 @@
+﻿CREATE TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan (
+	[PlanID] [int] IDENTITY (1, 1) NOT NULL ,
+	[PortalID] [int] NOT NULL ,
+	[RoleID] [int] NOT NULL ,
+	[Name] [nvarchar] (50) NOT NULL ,
+	[Description] [nvarchar] (255) NULL ,
+	[IsActive] [bit] NOT NULL ,
+	[ViewOrder] [int] NOT NULL ,
+	[ServiceFee] [money] NOT NULL ,
+	[BillingFrequency] [int] NOT NULL ,
+	[BillingPeriod] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt (
+	[ReceiptID] [int] IDENTITY (1, 1) NOT NULL ,
+	[PortalID] [int] NULL ,
+	[UserID] [int] NOT NULL ,
+	[DateCreated] [datetime] NOT NULL ,
+	[DateStart] [datetime] NOT NULL ,
+	[DateEnd] [datetime] NULL ,
+	[Status] [nvarchar] (255) NOT NULL ,
+	[Name] [nvarchar] (50) NOT NULL ,
+	[ServiceFee] [money] NOT NULL ,
+	[BillingFrequency] [int] NOT NULL ,
+	[BillingPeriod] [int] NOT NULL ,  
+	[Processor] [nvarchar] (50) NOT NULL ,
+	[ProcessorTxID] [nvarchar] (50) NOT NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan ADD 
+	CONSTRAINT [DF_{objectQualifier}DnnForge_SubscriptionTools_Plan_IsActive] DEFAULT (0) FOR [IsActive],
+	CONSTRAINT [DF_{objectQualifier}DnnForge_SubscriptionTools_Plan_SortOrder] DEFAULT (0) FOR [ViewOrder],
+	CONSTRAINT [PK_{objectQualifier}DnnForge_SubscriptionTools_Plan] PRIMARY KEY  CLUSTERED 
+	(
+		[PlanID]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt ADD 
+	CONSTRAINT [PK_{objectQualifier}SubscriptionTools_Receipt] PRIMARY KEY  CLUSTERED 
+	(
+		[ReceiptID]
+	)  ON [PRIMARY] 
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanAdd
+	@PortalID int,
+	@RoleID int,
+	@Name nvarchar(50),
+	@Description nvarchar(255),
+	@IsActive bit,
+	@ViewOrder int,
+	@ServiceFee money,
+	@BillingFrequency int,
+	@BillingPeriod int
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan (
+	[PortalID],
+	[RoleID],
+	[Name],
+	[Description],
+	[IsActive],
+	[ViewOrder],
+	[ServiceFee],
+	[BillingFrequency],
+	[BillingPeriod]
+) VALUES (
+	@PortalID,
+	@RoleID,
+	@Name,
+	@Description,
+	@IsActive,
+	@ViewOrder,
+	@ServiceFee,
+	@BillingFrequency,
+	@BillingPeriod
+)
+
+select SCOPE_IDENTITY()
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanDelete
+	@PlanID int
+AS
+
+DELETE FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan
+WHERE
+	[PlanID] = @PlanID
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanGet
+	@PlanID int 
+AS
+
+SELECT
+	[PlanID],
+	[RoleID],
+	[PortalID],
+	[Name],
+	[Description],
+	[ServiceFee],
+	[BillingFrequency],
+	[BillingPeriod],
+	[IsActive]
+FROM 
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan
+WHERE
+	PlanID = @PlanID
+ORDER BY
+	[Name] 
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanList
+	@PortalID int 
+AS
+
+SELECT
+	[PlanID],
+	[RoleID],
+	[PortalID],
+	[Name],
+	[Description],
+	[ServiceFee],
+	[BillingFrequency],
+	[BillingPeriod],
+	[IsActive],
+	[ViewOrder] 
+FROM 
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan
+WHERE
+	PortalID = @PortalID
+ORDER BY
+	[ViewOrder] ASC, [Name]
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanUpdate
+	@PlanID int, 
+	@PortalID int, 
+	@RoleID int, 
+	@Name nvarchar(50), 
+	@Description nvarchar(255), 
+	@IsActive bit, 
+	@ViewOrder int, 
+	@ServiceFee money, 
+	@BillingFrequency int, 
+	@BillingPeriod int 
+AS
+
+UPDATE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan SET
+	[PortalID] = @PortalID,
+	[RoleID] = @RoleID,
+	[Name] = @Name,
+	[Description] = @Description,
+	[IsActive] = @IsActive,
+	[ViewOrder] = @ViewOrder,
+	[ServiceFee] = @ServiceFee,
+	[BillingFrequency] = @BillingFrequency,
+	[BillingPeriod] = @BillingPeriod
+WHERE
+	[PlanID] = @PlanID
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptAdd
+	@PortalID int,
+	@UserID int,
+	@DateCreated datetime,
+	@DateStart datetime,
+	@DateEnd datetime,
+	@Status nvarchar(255),
+	@Name nvarchar(50), 
+	@ServiceFee money,
+	@BillingPeriod int, 
+	@BillingFrequency int, 
+	@Processor nvarchar(50),
+	@ProcessorTxID nvarchar(50) 
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt (
+	[PortalID],
+	[UserID],
+	[DateCreated],
+	[DateStart],
+	[DateEnd],
+	[Status],
+	[Name], 
+	[ServiceFee],
+	[BillingPeriod],
+	[BillingFrequency],
+	[Processor],
+	[ProcessorTxID] 
+) VALUES (
+	@PortalID, 
+	@UserID,
+	@DateCreated,
+	@DateStart,
+	@DateEnd,
+	@Status,
+	@Name,
+	@ServiceFee,
+	@BillingPeriod,
+	@BillingFrequency, 
+	@Processor,
+	@ProcessorTxID 
+)
+
+select SCOPE_IDENTITY()
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptDelete
+	@ReceiptID int
+AS
+
+DELETE FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt
+WHERE
+	[ReceiptID] = @ReceiptID
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptGet
+	@ReceiptID int
+	
+AS
+
+SELECT
+	[ReceiptID],
+	[UserID],
+	[PortalID],
+	[DateCreated],
+	[DateStart],
+	[DateEnd],
+	[Status],
+	[Name], 
+	[ServiceFee],
+	[BillingPeriod],
+	[BillingFrequency],
+	[Processor], 
+	[ProcessorTxID] 
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt
+WHERE
+	[ReceiptID] = @ReceiptID
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptList
+	@PortalID int,
+	@UserID int 
+AS
+
+SELECT
+	r.[ReceiptID],
+	r.[UserID],
+	r.[PortalID],
+	r.[DateCreated],
+	r.[DateStart],
+	r.[DateEnd],
+	r.[Status],
+	r.[Name],
+	r.[ServiceFee],
+	r.[BillingPeriod],
+	r.[BillingFrequency],
+	r.[Processor], 
+	r.[ProcessorTxID]  
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r 
+WHERE r.[UserID] = @UserID and r.[PortalID] = @PortalID 
+ORDER BY DateCreated DESC
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptUpdate
+	@ReceiptID int, 
+	@PortalID int, 
+	@UserID int, 
+	@DateCreated datetime, 
+	@DateStart datetime, 
+	@DateEnd datetime, 
+	@Status nvarchar(255), 
+	@Name nvarchar(50),
+	@ServiceFee money,
+	@BillingPeriod int,
+	@BillingFrequency int , 
+	@Processor nvarchar(50),
+	@ProcessorTxID nvarchar(50) 
+AS
+
+UPDATE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt SET
+	[UserID] = @UserID,
+	[PortalID] = @PortalID, 
+	[DateCreated] = @DateCreated,
+	[DateStart] = @DateStart,
+	[DateEnd] = @DateEnd,
+	[Status] = @Status,
+	[Name] = @Name, 
+	[ServiceFee] = @ServiceFee,
+	[BillingPeriod] = @BillingPeriod,
+	[BillingFrequency] = @BillingFrequency,
+	[Processor] = @Processor, 
+	[ProcessorTxID] = @ProcessorTxID  
+WHERE
+	[ReceiptID] = @ReceiptID
+GO
+
+CREATE TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Content (
+	[ContentID] [int] IDENTITY (1, 1) NOT NULL ,
+	[ModuleID] [int] NOT NULL ,
+	[SettingName] [nvarchar] (50) NOT NULL ,
+	[SettingValue] [ntext] NOT NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Content ADD 
+	CONSTRAINT [PK_{objectQualifier}DnnForge_SubscriptionTools_Content] PRIMARY KEY  CLUSTERED 
+	(
+		[ContentID]
+	)  ON [PRIMARY] 
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ContentAdd
+	@ModuleID int,
+	@SettingName nvarchar(50),
+	@SettingValue ntext
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Content (
+	[ModuleID],
+	[SettingName],
+	[SettingValue]
+) VALUES (
+	@ModuleID,
+	@SettingName,
+	@SettingValue
+)
+
+select SCOPE_IDENTITY()
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ContentGet
+	@ModuleID int,
+	@SettingName nvarchar(50) 
+AS
+
+SELECT
+	[ContentID],
+	[ModuleID],
+	[SettingName],
+	[SettingValue]
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Content
+WHERE
+	[ModuleID] = @ModuleID
+	and
+	[SettingName] = @SettingName 
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ContentUpdate
+	@ContentID int, 
+	@ModuleID int, 
+	@SettingName nvarchar(50), 
+	@SettingValue ntext 
+AS
+
+UPDATE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Content SET
+	[ModuleID] = @ModuleID,
+	[SettingName] = @SettingName,
+	[SettingValue] = @SettingValue
+WHERE
+	[ContentID] = @ContentID
+GO

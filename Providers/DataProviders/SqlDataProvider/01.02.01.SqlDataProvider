@@ -1,0 +1,24 @@
+﻿DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanGet
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanGet
+	@PlanID int 
+AS
+
+SELECT
+	[PlanID],
+	[RoleID],
+	[PortalID],
+	[Name],
+	[Description],
+	[ServiceFee],
+	[BillingFrequency],
+	[BillingPeriod],
+	[IsActive]
+FROM 
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan
+WHERE
+	PlanID = @PlanID
+ORDER BY
+	[Name] 
+GO

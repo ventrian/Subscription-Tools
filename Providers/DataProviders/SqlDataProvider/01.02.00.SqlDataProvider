@@ -1,0 +1,198 @@
+﻿ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt ADD
+	ReminderSent bit NOT NULL CONSTRAINT DF_{objectQualifier}DnnForge_SubscriptionTools_Receipt_ReminderSent DEFAULT 0
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptAdd
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptAdd
+	@PortalID int,
+	@UserID int,
+	@DateCreated datetime,
+	@DateStart datetime,
+	@DateEnd datetime,
+	@Status nvarchar(255),
+	@Name nvarchar(50), 
+	@ServiceFee money,
+	@BillingPeriod int, 
+	@BillingFrequency int, 
+	@Processor nvarchar(50),
+	@ProcessorTxID nvarchar(50),
+	@ReminderSent bit 
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt (
+	[PortalID],
+	[UserID],
+	[DateCreated],
+	[DateStart],
+	[DateEnd],
+	[Status],
+	[Name], 
+	[ServiceFee],
+	[BillingPeriod],
+	[BillingFrequency],
+	[Processor],
+	[ProcessorTxID],
+	[ReminderSent] 
+) VALUES (
+	@PortalID, 
+	@UserID,
+	@DateCreated,
+	@DateStart,
+	@DateEnd,
+	@Status,
+	@Name,
+	@ServiceFee,
+	@BillingPeriod,
+	@BillingFrequency, 
+	@Processor,
+	@ProcessorTxID,
+	@ReminderSent  
+)
+
+select SCOPE_IDENTITY()
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptUpdate
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptUpdate
+	@ReceiptID int, 
+	@PortalID int, 
+	@UserID int, 
+	@DateCreated datetime, 
+	@DateStart datetime, 
+	@DateEnd datetime, 
+	@Status nvarchar(255), 
+	@Name nvarchar(50),
+	@ServiceFee money,
+	@BillingPeriod int,
+	@BillingFrequency int , 
+	@Processor nvarchar(50),
+	@ProcessorTxID nvarchar(50),
+	@ReminderSent bit  
+AS
+
+UPDATE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt SET
+	[UserID] = @UserID,
+	[PortalID] = @PortalID, 
+	[DateCreated] = @DateCreated,
+	[DateStart] = @DateStart,
+	[DateEnd] = @DateEnd,
+	[Status] = @Status,
+	[Name] = @Name, 
+	[ServiceFee] = @ServiceFee,
+	[BillingPeriod] = @BillingPeriod,
+	[BillingFrequency] = @BillingFrequency,
+	[Processor] = @Processor, 
+	[ProcessorTxID] = @ProcessorTxID,
+	[ReminderSent] = @ReminderSent 
+WHERE
+	[ReceiptID] = @ReceiptID
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptList
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptList
+	@PortalID int,
+	@UserID int 
+AS
+
+SELECT
+	r.[ReceiptID],
+	r.[UserID],
+	r.[PortalID],
+	r.[DateCreated],
+	r.[DateStart],
+	r.[DateEnd],
+	r.[Status],
+	r.[Name],
+	r.[ServiceFee],
+	r.[BillingPeriod],
+	r.[BillingFrequency],
+	r.[Processor], 
+	r.[ProcessorTxID],
+	r.[ReminderSent], 
+	u.[FirstName],
+	u.[LastName],
+	u.[UserName],
+	u.[Email]    
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r INNER JOIN
+		{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE r.[UserID] = @UserID and r.[PortalID] = @PortalID 
+ORDER BY DateCreated DESC
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptGet
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptGet
+	@ReceiptID int
+AS
+
+SELECT
+r.[ReceiptID],
+	r.[UserID],
+	r.[PortalID],
+	r.[DateCreated],
+	r.[DateStart],
+	r.[DateEnd],
+	r.[Status],
+	r.[Name],
+	r.[ServiceFee],
+	r.[BillingPeriod],
+	r.[BillingFrequency],
+	r.[Processor], 
+	r.[ProcessorTxID],
+	r.[ReminderSent], 
+	u.[FirstName],
+	u.[LastName],
+	u.[UserName],
+	u.[Email]    
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r INNER JOIN
+		{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE
+	r.[ReceiptID] = @ReceiptID
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptListExpired
+	@PortalID int,
+	@PeriodDays int 
+AS
+
+SELECT
+	r.[ReceiptID],
+	r.[UserID],
+	r.[PortalID],
+	r.[DateCreated],
+	r.[DateStart],
+	r.[DateEnd],
+	r.[Status],
+	r.[Name],
+	r.[ServiceFee],
+	r.[BillingPeriod],
+	r.[BillingFrequency],
+	r.[Processor], 
+	r.[ProcessorTxID],
+	r.[ReminderSent], 
+	u.[FirstName],
+	u.[LastName],
+	u.[UserName],
+	u.[Email]    
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r LEFT OUTER JOIN
+		{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE 
+	r.[PortalID] = @PortalID 
+	and
+	r.[ReceiptID] = (select top 1 ReceiptID from {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r2 where r.userid = r2.userid order by DateCreated DESC)
+	and
+	r.[DateEnd] < DateAdd(day, @PeriodDays, GetDate()) 
+	and
+	r.[ReminderSent] = 0 
+ORDER BY DateCreated DESC
+GO

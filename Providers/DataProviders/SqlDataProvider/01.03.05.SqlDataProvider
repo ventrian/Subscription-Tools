@@ -1,0 +1,465 @@
+﻿ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan
+	ADD ModuleID int 
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt
+	ADD ModuleID int 
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Order
+	ADD ModuleID int 
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanList
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanList
+	@PortalID int,
+	@ModuleID int 
+AS
+
+SELECT
+	[PlanID],
+	[RoleID],
+	[PortalID],
+	[ModuleID], 
+	[Name],
+	[Description],
+	[ServiceFee],
+	[BillingFrequency],
+	[BillingPeriod],
+	[IsActive],
+	[ViewOrder] 
+FROM 
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan
+WHERE
+	PortalID = @PortalID
+	and
+	(ModuleID is null or ModuleID = @ModuleID) 
+ORDER BY
+	[ViewOrder] ASC, [Name]
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanAdd
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanAdd
+	@PortalID int,
+	@ModuleID int, 
+	@RoleID int,
+	@Name nvarchar(50),
+	@Description nvarchar(255),
+	@IsActive bit,
+	@ViewOrder int,
+	@ServiceFee money,
+	@BillingFrequency int,
+	@BillingPeriod int
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan (
+	[PortalID],
+	[ModuleID], 
+	[RoleID],
+	[Name],
+	[Description],
+	[IsActive],
+	[ViewOrder],
+	[ServiceFee],
+	[BillingFrequency],
+	[BillingPeriod]
+) VALUES (
+	@PortalID,
+	@ModuleID, 
+	@RoleID,
+	@Name,
+	@Description,
+	@IsActive,
+	@ViewOrder,
+	@ServiceFee,
+	@BillingFrequency,
+	@BillingPeriod
+)
+
+select SCOPE_IDENTITY()
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanGet
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanGet
+	@PlanID int 
+AS
+
+SELECT
+	[PlanID],
+	[RoleID],
+	[PortalID],
+	[ModuleID], 
+	[Name],
+	[Description],
+	[ServiceFee],
+	[BillingFrequency],
+	[BillingPeriod],
+	[IsActive]
+FROM 
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan
+WHERE
+	PlanID = @PlanID
+ORDER BY
+	[Name]
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanUpdate
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_PlanUpdate
+	@PlanID int, 
+	@PortalID int, 
+	@ModuleID int, 
+	@RoleID int, 
+	@Name nvarchar(50), 
+	@Description nvarchar(255), 
+	@IsActive bit, 
+	@ViewOrder int, 
+	@ServiceFee money, 
+	@BillingFrequency int, 
+	@BillingPeriod int 
+AS
+
+UPDATE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Plan SET
+	[PortalID] = @PortalID,
+	[ModuleID] = @ModuleID, 
+	[RoleID] = @RoleID,
+	[Name] = @Name,
+	[Description] = @Description,
+	[IsActive] = @IsActive,
+	[ViewOrder] = @ViewOrder,
+	[ServiceFee] = @ServiceFee,
+	[BillingFrequency] = @BillingFrequency,
+	[BillingPeriod] = @BillingPeriod
+WHERE
+	[PlanID] = @PlanID
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderGet
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderGet
+	@OrderID int
+	
+AS
+
+SELECT
+	[OrderID],
+	[PortalID],
+	[ModuleID], 
+	[UserID]
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Order
+WHERE
+	[OrderID] = @OrderID
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderAdd
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_OrderAdd
+	@PortalID int,
+	@ModuleID int, 
+	@UserID int
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Order (
+	[PortalID],
+	[ModuleID],
+	[UserID]
+) VALUES (
+	@PortalID,
+	@ModuleID, 
+	@UserID
+)
+
+select SCOPE_IDENTITY()
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptGet
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptGet
+	@ReceiptID int
+AS
+
+SELECT
+	r.[ReceiptID],
+	r.[UserID],
+	r.[PortalID],
+	r.[ModuleID], 
+	r.[DateCreated],
+	r.[DateStart],
+	r.[DateEnd],
+	r.[Status],
+	r.[Name],
+	r.[ServiceFee],
+	r.[BillingPeriod],
+	r.[BillingFrequency],
+	r.[Processor], 
+	r.[ProcessorTxID],
+	u.[FirstName],
+	u.[LastName],
+	u.[UserName],
+	u.[Email]    
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r INNER JOIN
+		{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE
+	r.[ReceiptID] = @ReceiptID
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptAdd
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptAdd
+	@PortalID int,
+	@ModuleID int, 
+	@UserID int,
+	@DateCreated datetime,
+	@DateStart datetime,
+	@DateEnd datetime,
+	@Status nvarchar(255),
+	@Name nvarchar(50), 
+	@ServiceFee money,
+	@BillingPeriod int, 
+	@BillingFrequency int, 
+	@Processor nvarchar(50),
+	@ProcessorTxID nvarchar(50)
+AS
+
+INSERT INTO {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt (
+	[PortalID],
+	[ModuleID], 
+	[UserID],
+	[DateCreated],
+	[DateStart],
+	[DateEnd],
+	[Status],
+	[Name], 
+	[ServiceFee],
+	[BillingPeriod],
+	[BillingFrequency],
+	[Processor],
+	[ProcessorTxID]
+) VALUES (
+	@PortalID, 
+	@ModuleID, 
+	@UserID,
+	@DateCreated,
+	@DateStart,
+	@DateEnd,
+	@Status,
+	@Name,
+	@ServiceFee,
+	@BillingPeriod,
+	@BillingFrequency, 
+	@Processor,
+	@ProcessorTxID
+)
+
+select SCOPE_IDENTITY()
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptList
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptList
+	@PortalID int,
+	@ModuleID int, 
+	@UserID int,
+	@UserName nvarchar(255)  
+AS
+
+SELECT     
+	r.ReceiptID, 
+	r.UserID, 
+	r.PortalID, 
+	r.ModuleID, 
+	r.DateCreated, 
+	r.DateStart, 
+	r.DateEnd, 
+	r.Status, 
+	r.Name, 
+	r.ServiceFee, 
+	r.BillingPeriod, 
+	r.BillingFrequency, 
+	r.Processor, 
+    r.ProcessorTxID, 
+	u.FirstName, 
+	u.LastName, 
+	u.UserName, 
+	u.Email
+
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r LEFT OUTER JOIN
+        	{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE 
+	(@UserID is null OR r.[UserID] = @UserID)
+	and
+	(@UserName is null OR u.[UserName] = @UserName) 
+	and 
+	r.[PortalID] = @PortalID 
+	and
+	(r.[ModuleID] is null or r.[ModuleID] = @ModuleID) 
+ORDER BY 
+	r.DateCreated DESC
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptListExpired
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptListExpired
+	@PortalID int,
+	@ModuleID int, 
+	@DatePeriod DateTime,
+	@DateFrequency DateTime  
+AS
+
+SELECT
+	r.[ReceiptID],
+	r.[UserID],
+	r.[PortalID],
+	r.[ModuleID], 
+	r.[DateCreated],
+	r.[DateStart],
+	r.[DateEnd],
+	r.[Status],
+	r.[Name],
+	r.[ServiceFee],
+	r.[BillingPeriod],
+	r.[BillingFrequency],
+	r.[Processor], 
+	r.[ProcessorTxID],
+	u.[FirstName],
+	u.[LastName],
+	u.[UserName],
+	u.[Email]    
+FROM         
+	{databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r LEFT OUTER JOIN
+		{databaseOwner}{objectQualifier}Users u ON r.UserID = u.UserID
+WHERE 
+	r.[PortalID] = @PortalID
+	and
+	(r.[ModuleID] is null or r.[ModuleID] = @ModuleID) 
+	and
+	r.[DateEnd] > @DatePeriod  
+	and
+	r.[ReceiptID] = (select top 1 ReceiptID from {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt r2 where r.userid = r2.userid order by DateCreated DESC)
+	and
+	r.[ReceiptID] not in (SELECT TOP 1 ReceiptID from {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Reminder r3 where r.ReceiptID = r3.ReceiptID and DateSent > @DateFrequency ORDER BY DateSent DESC)
+ORDER BY 
+	DateCreated DESC
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptUpdate
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_ReceiptUpdate
+	@ReceiptID int, 
+	@PortalID int, 
+	@ModuleID int, 
+	@UserID int, 
+	@DateCreated datetime, 
+	@DateStart datetime, 
+	@DateEnd datetime, 
+	@Status nvarchar(255), 
+	@Name nvarchar(50),
+	@ServiceFee money,
+	@BillingPeriod int,
+	@BillingFrequency int , 
+	@Processor nvarchar(50),
+	@ProcessorTxID nvarchar(50)
+AS
+
+UPDATE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt SET
+	[UserID] = @UserID,
+	[PortalID] = @PortalID, 
+	[ModuleID] = @ModuleID, 
+	[DateCreated] = @DateCreated,
+	[DateStart] = @DateStart,
+	[DateEnd] = @DateEnd,
+	[Status] = @Status,
+	[Name] = @Name, 
+	[ServiceFee] = @ServiceFee,
+	[BillingPeriod] = @BillingPeriod,
+	[BillingFrequency] = @BillingFrequency,
+	[Processor] = @Processor, 
+	[ProcessorTxID] = @ProcessorTxID
+WHERE
+	[ReceiptID] = @ReceiptID
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport1
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport1
+	@PortalID int ,
+	@ModuleID int, 
+	@DateStart	DateTime,
+	@DateEnd	DateTime 
+AS
+
+DECLARE @MonthForwardCounter int
+DECLARE @MonthForwardDate DateTime
+DECLARE @SQL nvarchar(4000)
+SET @SQL = ' SELECT ''Total Memberships       '' as Role, '
+SET @MonthForwardCounter = 0
+WHILE @MonthForwardCounter <13
+BEGIN
+   SET @MonthForwardDate = DateAdd(month,@MonthForwardCounter,GetDate())
+   SET @SQL = @SQL + ' SUM(CASE WHEN Month(DateEnd) =' + Cast(Month(@MonthForwardDate) as varchar(2)) 
+   SET @SQL = @SQL + ' AND Year(DateEnd) =' + Cast(Year(@MonthForwardDate) as varchar(4)) + ' and DateEnd > GetDate() '
+   SET @SQL = @SQL + ' THEN 1 ELSE 0 END) as ' + Substring(DateName(m,@MonthForwardDate),0,4) + Substring(Cast(Year(@MonthForwardDate) as varchar(4)),3,2) + ','
+   SET @MonthForwardCounter = @MonthForwardCounter + 1
+END
+SET @SQL = Substring(@SQL,0,LEN(@SQL))
+SET @SQL = @SQL + ' INTO #Subs'
+SET @SQL = @SQL + ' FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt '
+SET @SQL = @SQL + ' WHERE PortalID = ' + Cast(@PortalID as varchar) + ' and (ModuleID is null or ModuleID = ' + Cast(@ModuleID as varchar) + '); '
+
+SET @SQL = @SQL + ' INSERT INTO #Subs'
+SET @SQL = @SQL + ' SELECT Name as Role, '
+SET @MonthForwardCounter = 0
+WHILE @MonthForwardCounter <13
+BEGIN
+   SET @MonthForwardDate = DateAdd(month,@MonthForwardCounter,GetDate())
+   SET @SQL = @SQL + ' SUM(CASE WHEN Month(DateEnd) =' + Cast(Month(@MonthForwardDate) as varchar(2)) 
+   SET @SQL = @SQL + ' AND Year(DateEnd) =' + Cast(Year(@MonthForwardDate) as varchar(4)) + ' and DateEnd > GetDate() '
+   SET @SQL = @SQL + ' THEN 1 ELSE 0 END) as ' + Substring(DateName(m,@MonthForwardDate),0,4) + Substring(Cast(Year(@MonthForwardDate) as varchar(4)),3,2) + ','
+   SET @MonthForwardCounter = @MonthForwardCounter + 1
+END
+SET @SQL = Substring(@SQL,0,LEN(@SQL))
+SET @SQL = @SQL + ' FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt '
+SET @SQL = @SQL + ' WHERE PortalID = ' + Cast(@PortalID as varchar) + ' and (ModuleID is null or ModuleID = ' + Cast(@ModuleID as varchar) + ') ' 
+SET @SQL = @SQL + ' GROUP BY Name;'
+
+SET @SQL = @SQL + ' SELECT * FROM #Subs;'
+
+PRINT(@SQL)
+EXEC sp_executesql @SQL
+GO
+
+DROP PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport3
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport3
+	@PortalID int,
+	@ModuleID int, 
+	@DateStart	DateTime,
+	@DateEnd	DateTime 
+AS
+
+SELECT DISTINCT(UR.UserID), U.UserName, U.FirstName, U.LastName, Name, DateEnd, AM.CreateDate, AM.LastLoginDate
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt UR
+INNER JOIN {databaseOwner}{objectQualifier}USERS U ON UR.UserID = U.UserID
+INNER JOIN aspnet_Users AU ON AU.UserName = U.Username
+INNER JOIN aspnet_Membership AM ON AM.UserId = AU.UserId
+WHERE UR.DateEnd IS NOT NULL AND UR.PortalID = @PortalID and (UR.ModuleID is null or UR.ModuleID = @ModuleID) and (@DateStart is null or UR.DateStart > @DateStart) and (@DateEnd is null OR UR.DateEnd < @DateEnd)
+ORDER BY DateEnd
+GO

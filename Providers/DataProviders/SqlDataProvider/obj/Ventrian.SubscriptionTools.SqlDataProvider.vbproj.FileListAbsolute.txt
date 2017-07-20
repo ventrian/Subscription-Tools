@@ -1,0 +1,7 @@
+C:\Projects\DotNetNuke\Sites\DotNetNuke455\Website\bin\Ventrian.SubscriptionTools.SqlDataProvider.dll
+C:\Projects\DotNetNuke\Sites\DotNetNuke455\Website\bin\Ventrian.SubscriptionTools.SqlDataProvider.pdb
+C:\Projects\DotNetNuke\Sites\DotNetNuke455\Website\bin\DnnForge.SubscriptionTools.SqlDataProvider.xml
+C:\Projects\DotNetNuke\Sites\DotNetNuke455\Website\DesktopModules\SubscriptionTools\Providers\DataProviders\SqlDataProvider\obj\Debug\ResolveAssemblyReference.cache
+C:\Projects\DotNetNuke\Sites\DotNetNuke455\Website\DesktopModules\SubscriptionTools\Providers\DataProviders\SqlDataProvider\obj\Debug\Ventrian.SubscriptionTools.SqlDataProvider.dll
+C:\Projects\DotNetNuke\Sites\DotNetNuke455\Website\DesktopModules\SubscriptionTools\Providers\DataProviders\SqlDataProvider\obj\Debug\DnnForge.SubscriptionTools.SqlDataProvider.xml
+C:\Projects\DotNetNuke\Sites\DotNetNuke455\Website\DesktopModules\SubscriptionTools\Providers\DataProviders\SqlDataProvider\obj\Debug\Ventrian.SubscriptionTools.SqlDataProvider.pdb

@@ -1,0 +1,73 @@
+﻿CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport1
+	@PortalID int ,
+	@DateStart	DateTime,
+	@DateEnd	DateTime 
+AS
+
+DECLARE @MonthForwardCounter int
+DECLARE @MonthForwardDate DateTime
+DECLARE @SQL nvarchar(4000)
+SET @SQL = ' SELECT ''Total Memberships       '' as Role, '
+SET @MonthForwardCounter = 0
+WHILE @MonthForwardCounter <13
+BEGIN
+   SET @MonthForwardDate = DateAdd(month,@MonthForwardCounter,GetDate())
+   SET @SQL = @SQL + ' SUM(CASE WHEN Month(DateEnd) =' + Cast(Month(@MonthForwardDate) as varchar(2)) 
+   SET @SQL = @SQL + ' AND Year(DateEnd) =' + Cast(Year(@MonthForwardDate) as varchar(4))
+   SET @SQL = @SQL + ' THEN 1 ELSE 0 END) as ' + Substring(DateName(m,@MonthForwardDate),0,4) + Substring(Cast(Year(@MonthForwardDate) as varchar(4)),3,2) + ','
+   SET @MonthForwardCounter = @MonthForwardCounter + 1
+END
+SET @SQL = Substring(@SQL,0,LEN(@SQL))
+SET @SQL = @SQL + ' INTO #Subs'
+SET @SQL = @SQL + ' FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt '
+SET @SQL = @SQL + ' WHERE PortalID = ' + Cast(@PortalID as varchar) + '; '
+
+SET @SQL = @SQL + ' INSERT INTO #Subs'
+SET @SQL = @SQL + ' SELECT Name as Role, '
+SET @MonthForwardCounter = 0
+WHILE @MonthForwardCounter <13
+BEGIN
+   SET @MonthForwardDate = DateAdd(month,@MonthForwardCounter,GetDate())
+   SET @SQL = @SQL + ' SUM(CASE WHEN Month(DateEnd) =' + Cast(Month(@MonthForwardDate) as varchar(2)) 
+   SET @SQL = @SQL + ' AND Year(DateEnd) =' + Cast(Year(@MonthForwardDate) as varchar(4))
+   SET @SQL = @SQL + ' THEN 1 ELSE 0 END) as ' + Substring(DateName(m,@MonthForwardDate),0,4) + Substring(Cast(Year(@MonthForwardDate) as varchar(4)),3,2) + ','
+   SET @MonthForwardCounter = @MonthForwardCounter + 1
+END
+SET @SQL = Substring(@SQL,0,LEN(@SQL))
+SET @SQL = @SQL + ' FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt '
+SET @SQL = @SQL + ' WHERE PortalID = ' + Cast(@PortalID as varchar) + ' '
+SET @SQL = @SQL + ' GROUP BY Name;'
+
+SET @SQL = @SQL + ' SELECT * FROM #Subs;'
+
+EXEC sp_executesql @SQL
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport2
+	@PortalID 	int,
+	@DateStart	DateTime,
+	@DateEnd	DateTime 
+AS
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport3
+	@PortalID int,
+	@DateStart	DateTime,
+	@DateEnd	DateTime 
+AS
+
+SELECT DISTINCT(UR.UserID), U.UserName, U.FirstName, U.LastName, Name, DateEnd, AM.CreateDate, AM.LastLoginDate
+FROM {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_Receipt UR
+INNER JOIN {databaseOwner}{objectQualifier}USERS U ON UR.UserID = U.UserID
+INNER JOIN aspnet_Users AU ON AU.UserName = U.Username
+INNER JOIN aspnet_Membership AM ON AM.UserId = AU.UserId
+WHERE UR.DateEnd IS NOT NULL AND UR.PortalID = @PortalID and (@DateStart is null or UR.DateStart > @DateStart) and (@DateEnd is null OR UR.DateEnd < @DateEnd)
+ORDER BY DateEnd
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DnnForge_SubscriptionTools_GetReport4
+	@PortalID int,
+	@DateStart	DateTime,
+	@DateEnd	DateTime 
+AS
+GO

@@ -1,0 +1,337 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4EBBE6F0-7D7F-476D-8DE3-B75E5E1C9224}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>
+    </RootNamespace>
+    <AssemblyName>Ventrian.SubscriptionTools</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OptionStrict>On</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DocumentationFile>Ventrian.xml</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>Ventrian.xml</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetNuke, Version=4.5.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Collections.Specialized" />
+    <Import Include="System.Configuration" />
+    <Import Include="System.Text" />
+    <Import Include="System.Text.RegularExpressions" />
+    <Import Include="System.Web" />
+    <Import Include="System.Web.Caching" />
+    <Import Include="System.Web.SessionState" />
+    <Import Include="System.Web.Security" />
+    <Import Include="System.Web.Profile" />
+    <Import Include="System.Web.UI" />
+    <Import Include="System.Web.UI.WebControls" />
+    <Import Include="System.Web.UI.WebControls.WebParts" />
+    <Import Include="System.Web.UI.HtmlControls" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\ModuleBase.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditPlan.ascx.designer.vb">
+      <DependentUpon>EditPlan.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="EditPlan.ascx.vb">
+      <DependentUpon>EditPlan.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditPlans.ascx.designer.vb">
+      <DependentUpon>EditPlans.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="EditPlans.ascx.vb">
+      <DependentUpon>EditPlans.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditReceipt.ascx.designer.vb">
+      <DependentUpon>EditReceipt.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="EditReceipt.ascx.vb">
+      <DependentUpon>EditReceipt.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditReceipts.ascx.designer.vb">
+      <DependentUpon>EditReceipts.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="EditReceipts.ascx.vb">
+      <DependentUpon>EditReceipts.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Entities\Constants.vb" />
+    <Compile Include="Entities\ContentController.vb" />
+    <Compile Include="Entities\ContentInfo.vb" />
+    <Compile Include="Entities\CrumbInfo.vb" />
+    <Compile Include="Entities\FrequencyType.vb" />
+    <Compile Include="Entities\OrderController.vb" />
+    <Compile Include="Entities\OrderInfo.vb" />
+    <Compile Include="Entities\OrderItemController.vb" />
+    <Compile Include="Entities\OrderItemInfo.vb" />
+    <Compile Include="Entities\PaymentType.vb" />
+    <Compile Include="Entities\PlanController.vb" />
+    <Compile Include="Entities\PlanInfo.vb" />
+    <Compile Include="Entities\ReceiptController.vb" />
+    <Compile Include="Entities\ReceiptInfo.vb" />
+    <Compile Include="Entities\ReminderJob.vb" />
+    <Compile Include="Entities\ReportController.vb" />
+    <Compile Include="Entities\ReportType.vb" />
+    <Compile Include="Entities\UserSettingController.vb" />
+    <Compile Include="Entities\UserSettingInfo.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Providers\DataProviders\DataProvider.vb" />
+    <Compile Include="Reports.ascx.designer.vb">
+      <DependentUpon>Reports.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports.ascx.vb">
+      <DependentUpon>Reports.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SendReminders.ascx.designer.vb">
+      <DependentUpon>SendReminders.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SendReminders.ascx.vb">
+      <DependentUpon>SendReminders.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Signup.ascx.designer.vb">
+      <DependentUpon>Signup.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Signup.ascx.vb">
+      <DependentUpon>Signup.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SignupDetails.ascx.designer.vb">
+      <DependentUpon>SignupDetails.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SignupDetails.ascx.vb">
+      <DependentUpon>SignupDetails.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SignupPlan.ascx.designer.vb">
+      <DependentUpon>SignupPlan.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SignupPlan.ascx.vb">
+      <DependentUpon>SignupPlan.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SignupRegister.ascx.designer.vb">
+      <DependentUpon>SignupRegister.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SignupRegister.ascx.vb">
+      <DependentUpon>SignupRegister.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SignupViewOptions.ascx.designer.vb">
+      <DependentUpon>SignupViewOptions.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SignupViewOptions.ascx.vb">
+      <DependentUpon>SignupViewOptions.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Status.ascx.designer.vb">
+      <DependentUpon>Status.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Status.ascx.vb">
+      <DependentUpon>Status.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StatusEditRole.ascx.designer.vb">
+      <DependentUpon>StatusEditRole.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="StatusEditRole.ascx.vb">
+      <DependentUpon>StatusEditRole.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StatusViewOptions.ascx.designer.vb">
+      <DependentUpon>StatusViewOptions.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="StatusViewOptions.ascx.vb">
+      <DependentUpon>StatusViewOptions.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tools\IPNHandler.aspx.designer.vb">
+      <DependentUpon>IPNHandler.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\IPNHandler.aspx.vb">
+      <DependentUpon>IPNHandler.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewInvoice.ascx.designer.vb">
+      <DependentUpon>ViewInvoice.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewInvoice.ascx.vb">
+      <DependentUpon>ViewInvoice.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\EditPlan.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\EditPlans.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\EditReceipt.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\EditReceipts.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\Reports.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\SendReminders.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\Signup.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\SignupDetails.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\SignupPlan.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\SignupRegister.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\SignupViewOptions.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\Status.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\StatusEditRole.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\StatusViewOptions.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\ViewInvoice.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="EditPlan.ascx" />
+    <Content Include="EditPlans.ascx" />
+    <Content Include="EditReceipt.ascx" />
+    <Content Include="EditReceipts.ascx" />
+    <Content Include="Reports.ascx" />
+    <Content Include="SendReminders.ascx" />
+    <Content Include="Signup.ascx" />
+    <Content Include="SignupDetails.ascx" />
+    <Content Include="SignupPlan.ascx" />
+    <Content Include="SignupRegister.ascx" />
+    <Content Include="SignupViewOptions.ascx" />
+    <Content Include="Status.ascx" />
+    <Content Include="StatusEditRole.ascx" />
+    <Content Include="StatusViewOptions.ascx" />
+    <Content Include="Tools\IPNHandler.aspx" />
+    <Content Include="ViewInvoice.ascx" />
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="SubscriptionTools.dnn" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" Condition="" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>53637</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
