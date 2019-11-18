@@ -269,7 +269,8 @@ Namespace Ventrian.SubscriptionTools
                 objReceiptController.Add(objReceipt)
 
                 If (chkAddToRole.Checked) Then
-                    objRoleController.AddUserRole(objReceipt.PortalID, objReceipt.UserID, objPlan.RoleID, objReceipt.DateEnd)
+                    objReceipt.DateStart = objUserRole.ExpiryDate
+                    objRoleController.AddUserRole(objReceipt.PortalID, objReceipt.UserID, objPlan.RoleID, objReceipt.DateStart, objReceipt.DateEnd)
                 End If
 
                 Response.Redirect(EditUrl("EditReceipts"), True)
