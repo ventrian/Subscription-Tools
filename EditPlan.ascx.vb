@@ -62,7 +62,8 @@ Namespace Ventrian.SubscriptionTools
         Private Sub BindCurrency()
 
             Dim ctlList As New Lists.ListController
-            Dim colCurrency As Lists.ListEntryInfoCollection = ctlList.GetListEntryInfoCollection("Currency", "")
+            'Dim colCurrency As Lists.ListEntryInfoCollection = ctlList.GetListEntryInfoCollection("Currency", "")
+            Dim colCurrency As IEnumerable(Of DotNetNuke.Common.Lists.ListEntryInfo) = ctlList.GetListEntryInfoItems("Currency", "")
 
             drpCurrency.DataSource = colCurrency
             drpCurrency.DataBind()
@@ -74,12 +75,13 @@ Namespace Ventrian.SubscriptionTools
         Private Sub BindRoles()
 
             Dim objRoleController As New RoleController
+            drpRole.DataSource = objRoleController.GetRoles(Me.PortalId)
 
-            drpRole.DataSource = objRoleController.GetPortalRoles(Me.PortalId)
             drpRole.DataBind()
             drpRole.Items.Insert(0, New ListItem(Localization.GetString("SelectRole.Text", Me.LocalResourceFile), "-1"))
 
-            rptRoles.DataSource = objRoleController.GetPortalRoles(Me.PortalId)
+            'rptRoles.DataSource = objRoleController.GetPortalRoles(Me.PortalId)
+            rptRoles.DataSource = objRoleController.GetRoles(Me.PortalId)
             rptRoles.DataBind()
 
         End Sub

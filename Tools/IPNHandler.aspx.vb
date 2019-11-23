@@ -175,7 +175,8 @@ Namespace Ventrian.SubscriptionTools.Tools
                                         objReceipt.Currency = currency
                                     End If
 
-                                    Dim objUser As UserInfo = UserController.GetUser(objOrder.PortalID, userID, True)
+                                    'Dim objUser As UserInfo = UserController.GetUser(objOrder.PortalID, userID, True)
+                                    Dim objUser As UserInfo = UserController.GetUserById(objOrder.PortalID, userID)
                                     If (objUser IsNot Nothing) Then
                                         objReceipt.DisplayName = objUser.DisplayName
                                         objReceipt.FirstName = objUser.FirstName
@@ -235,7 +236,9 @@ Namespace Ventrian.SubscriptionTools.Tools
                                 End If
 
                                 Dim objRoleController As New RoleController
-                                objRoleController.AddUserRole(objReceipt.PortalID, objReceipt.UserID, objPlan.RoleID, objReceipt.DateEnd)
+                                'objRoleController.AddUserRole(objReceipt.PortalID, objReceipt.UserID, objPlan.RoleID, objReceipt.DateEnd)
+                                'AddUserRole(portalId As Integer, userId As Integer, roleId As Integer, effectiveDate As Date, expiryDate As Date)
+                                objRoleController.AddUserRole(objReceipt.PortalID, objReceipt.UserID, objPlan.RoleID, objReceipt.DateStart, objReceipt.DateEnd)
                             End If
 
                         Next

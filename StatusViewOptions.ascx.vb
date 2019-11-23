@@ -22,7 +22,9 @@ Namespace Ventrian.SubscriptionTools
 
             Localization.LocalizeDataGrid(grdRoles, Me.LocalResourceFile)
 
-            grdRoles.DataSource = objRoleController.GetPortalRoles(Me.PortalId)
+            'grdRoles.DataSource = objRoleController.GetPortalRoles(Me.PortalId)
+            grdRoles.DataSource = objRoleController.GetRoles(Me.PortalId)
+
             grdRoles.DataBind()
 
         End Sub

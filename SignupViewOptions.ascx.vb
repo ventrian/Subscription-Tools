@@ -48,7 +48,8 @@ Namespace Ventrian.SubscriptionTools
         Private Sub BindCurrency()
 
             Dim ctlList As New Lists.ListController
-            Dim colCurrency As Lists.ListEntryInfoCollection = ctlList.GetListEntryInfoCollection("Currency", "")
+            'Dim colCurrency As Lists.ListEntryInfoCollection = ctlList.GetListEntryInfoCollection("Currency", "")
+            Dim colCurrency As IEnumerable(Of DotNetNuke.Common.Lists.ListEntryInfo) = ctlList.GetListEntryInfoItems("Currency", "")
 
             drpCurrency.DataSource = colCurrency
             drpCurrency.DataBind()

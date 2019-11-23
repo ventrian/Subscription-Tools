@@ -20,7 +20,8 @@ Namespace Ventrian.SubscriptionTools.Entities
 
         Public Function [Get](ByVal receiptID As Integer) As ReceiptInfo
 
-            Return CType(CBO.FillObject(DataProvider.Instance().GetReceipt(receiptID), GetType(ReceiptInfo)), ReceiptInfo)
+            'Return CType(CBO.FillObject(DataProvider.Instance().GetReceipt(receiptID), GetType(ReceiptInfo)), ReceiptInfo)
+            Return CBO.FillObject(Of ReceiptInfo)(DataProvider.Instance().GetReceipt(receiptID))
 
         End Function
 

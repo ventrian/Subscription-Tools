@@ -14,7 +14,8 @@ Namespace Ventrian.SubscriptionTools.Entities
 
         Public Function [Get](ByVal moduleID As Integer, ByVal settingName As String) As ContentInfo
 
-            Return CType(CBO.FillObject(DataProvider.Instance().GetContent(moduleID, settingName), GetType(ContentInfo)), ContentInfo)
+            'Return CType(CBO.FillObject(DataProvider.Instance().GetContent(moduleID, settingName), GetType(ContentInfo)), ContentInfo)
+            Return CBO.FillObject(Of ContentInfo)(DataProvider.Instance().GetContent(moduleID, settingName))
 
         End Function
 

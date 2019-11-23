@@ -46,8 +46,8 @@ Namespace Ventrian.SubscriptionTools
 
             Dim lRoles As IList(Of DotNetNuke.Entities.Users.UserRoleInfo) = objRoleController.GetUserRoles(Me.UserInfo, True)
             For Each role As DotNetNuke.Entities.Users.UserRoleInfo In lRoles
-                If PortalSecurity.IsInRole(role.FullName) Then
-                    objContentInfo = objContentController.Get(Me.ModuleId, role.FullName)
+                If PortalSecurity.IsInRole(role.RoleName) Then
+                    objContentInfo = objContentController.Get(Me.ModuleId, role.RoleName)
 
                     If Not (objContentInfo Is Nothing) Then
                         If (objContentInfo.SettingValue <> "") Then
