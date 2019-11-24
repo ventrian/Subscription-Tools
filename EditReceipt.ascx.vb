@@ -186,6 +186,11 @@ Namespace Ventrian.SubscriptionTools
             Try
 
                 ReadQueryString()
+
+                If (_receiptID = Null.NullInteger Or _receiptID < 0) AndAlso (Request("username") IsNot Nothing) Then
+                    txtUserName.Text = Request("username")
+                End If
+
                 BindCrumbs()
                 cmdStartDate.NavigateUrl = DotNetNuke.Common.Utilities.Calendar.InvokePopupCal(txtStartDate)
 
