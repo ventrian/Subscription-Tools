@@ -34,6 +34,8 @@ Namespace Ventrian.SubscriptionTools.Tools
                 serverURL = "https://www.sandbox.paypal.com/cgi-bin/webscr"
             End If
 
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
+
             ' Create the request back
             Dim req As HttpWebRequest = CType(WebRequest.Create(serverURL), HttpWebRequest)
 
