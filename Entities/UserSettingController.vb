@@ -14,7 +14,8 @@ Namespace Ventrian.SubscriptionTools.Entities
 
         Public Function [Get](ByVal userID As Integer, ByVal settingName As String) As UserSettingInfo
 
-            Return CType(CBO.FillObject(DataProvider.Instance().GetUserSetting(userID, settingName), GetType(UserSettingInfo)), UserSettingInfo)
+            'Return CType(CBO.FillObject(DataProvider.Instance().GetUserSetting(userID, settingName), GetType(UserSettingInfo)), UserSettingInfo)
+            Return CBO.FillObject(Of UserSettingInfo)(DataProvider.Instance().GetUserSetting(userID, settingName))
 
         End Function
 

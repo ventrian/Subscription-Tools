@@ -14,7 +14,8 @@ Namespace Ventrian.SubscriptionTools.Entities
 
         Public Function [Get](ByVal orderID As Integer) As OrderInfo
 
-            Return CType(CBO.FillObject(DataProvider.Instance().GetOrder(orderID), GetType(OrderInfo)), OrderInfo)
+            'Return CType(CBO.FillObject(DataProvider.Instance().GetOrder(orderID), GetType(OrderInfo)), OrderInfo)
+            Return CBO.FillObject(Of OrderInfo)(DataProvider.Instance().GetOrder(orderID))
 
         End Function
 

@@ -53,9 +53,10 @@ Namespace Ventrian.SubscriptionTools.Entities
             Dim portalID As Integer = Convert.ToInt32(Me.ScheduleHistoryItem.GetSetting("PortalID"))
             Dim moduleID As Integer = Convert.ToInt32(Me.ScheduleHistoryItem.GetSetting("ModuleID"))
 
-            Dim objModuleController As New ModuleController
+            'Dim objModuleController As New ModuleController
 
-            Dim settings As Hashtable = objModuleController.GetModuleSettings(moduleID)
+            'Dim settings As Hashtable = objModuleController.GetModuleSettings(moduleID)
+            Dim settings As Hashtable = ModuleController.Instance.GetModule(moduleID, -1, False).ModuleSettings
 
             Dim period As Integer = Null.NullInteger
             If (settings.Contains(Constants.REMINDER_PERIOD)) Then

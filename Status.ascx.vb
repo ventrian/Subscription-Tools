@@ -43,10 +43,11 @@ Namespace Ventrian.SubscriptionTools
             End If
 
             Dim objRoleController As New RoleController
-            Dim arrRoles As String() = objRoleController.GetRolesByUser(Me.UserId, Me.PortalId)
-            For Each role As String In arrRoles
-                If PortalSecurity.IsInRole(role) Then
-                    objContentInfo = objContentController.Get(Me.ModuleId, role)
+
+            Dim lRoles As IList(Of DotNetNuke.Entities.Users.UserRoleInfo) = objRoleController.GetUserRoles(Me.UserInfo, True)
+            For Each role As DotNetNuke.Entities.Users.UserRoleInfo In lRoles
+                If PortalSecurity.IsInRole(role.RoleName) Then
+                    objContentInfo = objContentController.Get(Me.ModuleId, role.RoleName)
 
                     If Not (objContentInfo Is Nothing) Then
                         If (objContentInfo.SettingValue <> "") Then
@@ -64,6 +65,28 @@ Namespace Ventrian.SubscriptionTools
                     End If
                 End If
             Next
+
+            'Dim arrRoles As String() = objRoleController.GetRolesByUser(Me.UserId, Me.PortalId)
+            'For Each role As String In arrRoles
+            '    If PortalSecurity.IsInRole(role) Then
+            '        objContentInfo = objContentController.Get(Me.ModuleId, role)
+
+            '        If Not (objContentInfo Is Nothing) Then
+            '            If (objContentInfo.SettingValue <> "") Then
+            '                Dim val As String = Server.HtmlDecode(objContentInfo.SettingValue)
+
+            '                If (Request.IsAuthenticated) Then
+            '                    val = val.Replace("[FULLNAME]", Me.UserInfo.DisplayName)
+            '                    val = val.Replace("[USERNAME]", Me.UserInfo.Username)
+            '                End If
+
+            '                literal.Text = val
+            '                phControls.Controls.Add(literal)
+            '                Return
+            '            End If
+            '        End If
+            '    End If
+            'Next
 
             objContentInfo = objContentController.Get(Me.ModuleId, "Generic")
 

@@ -186,6 +186,11 @@ Namespace Ventrian.SubscriptionTools
             Try
 
                 ReadQueryString()
+
+                If (_receiptID = Null.NullInteger Or _receiptID < 0) AndAlso (Request("username") IsNot Nothing) Then
+                    txtUserName.Text = Request("username")
+                End If
+
                 BindCrumbs()
                 cmdStartDate.NavigateUrl = DotNetNuke.Common.Utilities.Calendar.InvokePopupCal(txtStartDate)
 
@@ -269,7 +274,8 @@ Namespace Ventrian.SubscriptionTools
                 objReceiptController.Add(objReceipt)
 
                 If (chkAddToRole.Checked) Then
-                    objRoleController.AddUserRole(objReceipt.PortalID, objReceipt.UserID, objPlan.RoleID, objReceipt.DateEnd)
+                    objReceipt.DateStart = objUserRole.ExpiryDate
+                    objRoleController.AddUserRole(objReceipt.PortalID, objReceipt.UserID, objPlan.RoleID, objReceipt.DateStart, objReceipt.DateEnd)
                 End If
 
                 Response.Redirect(EditUrl("EditReceipts"), True)

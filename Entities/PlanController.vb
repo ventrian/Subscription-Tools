@@ -26,7 +26,8 @@ Namespace Ventrian.SubscriptionTools.Entities
 
         Public Function [Get](ByVal planID As Integer) As PlanInfo
 
-            Return CType(CBO.FillObject(DataProvider.Instance().GetPlan(planID), GetType(PlanInfo)), PlanInfo)
+            'Return CType(CBO.FillObject(DataProvider.Instance().GetPlan(planID), GetType(PlanInfo)), PlanInfo)
+            Return CBO.FillObject(Of PlanInfo)(DataProvider.Instance().GetPlan(planID))
 
         End Function
 

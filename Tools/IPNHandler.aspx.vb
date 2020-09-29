@@ -34,6 +34,8 @@ Namespace Ventrian.SubscriptionTools.Tools
                 serverURL = "https://www.sandbox.paypal.com/cgi-bin/webscr"
             End If
 
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
+
             ' Create the request back
             Dim req As HttpWebRequest = CType(WebRequest.Create(serverURL), HttpWebRequest)
 
@@ -161,8 +163,9 @@ Namespace Ventrian.SubscriptionTools.Tools
                                     If (objPlan.Currency <> "") Then
                                         objReceipt.Currency = objPlan.Currency
                                     Else
-                                        Dim objModuleController As New ModuleController
-                                        Dim settings As Hashtable = objModuleController.GetModuleSettings(moduleID)
+                                        'Dim objModuleController As New ModuleController
+                                        'Dim settings As Hashtable = objModuleController.GetModuleSettings(moduleID)
+                                        Dim settings As Hashtable = ModuleController.Instance.GetModule(moduleID, -1, False).ModuleSettings
 
                                         Dim currency As String = ""
                                         If (settings.Contains(Constants.CURRENCY)) Then
@@ -174,7 +177,8 @@ Namespace Ventrian.SubscriptionTools.Tools
                                         objReceipt.Currency = currency
                                     End If
 
-                                    Dim objUser As UserInfo = UserController.GetUser(objOrder.PortalID, userID, True)
+                                    'Dim objUser As UserInfo = UserController.GetUser(objOrder.PortalID, userID, True)
+                                    Dim objUser As UserInfo = UserController.GetUserById(objOrder.PortalID, userID)
                                     If (objUser IsNot Nothing) Then
                                         objReceipt.DisplayName = objUser.DisplayName
                                         objReceipt.FirstName = objUser.FirstName
@@ -234,7 +238,9 @@ Namespace Ventrian.SubscriptionTools.Tools
                                 End If
 
                                 Dim objRoleController As New RoleController
-                                objRoleController.AddUserRole(objReceipt.PortalID, objReceipt.UserID, objPlan.RoleID, objReceipt.DateEnd)
+                                'objRoleController.AddUserRole(objReceipt.PortalID, objReceipt.UserID, objPlan.RoleID, objReceipt.DateEnd)
+                                'AddUserRole(portalId As Integer, userId As Integer, roleId As Integer, effectiveDate As Date, expiryDate As Date)
+                                objRoleController.AddUserRole(objReceipt.PortalID, objReceipt.UserID, objPlan.RoleID, objReceipt.DateStart, objReceipt.DateEnd)
                             End If
 
                         Next
@@ -262,8 +268,9 @@ Namespace Ventrian.SubscriptionTools.Tools
 
             Dim objReceipt As ReceiptInfo = CType(objReceipts(0), ReceiptInfo)
 
-            Dim objModuleController As New ModuleController
-            Dim settings As Hashtable = objModuleController.GetModuleSettings(moduleID)
+            'Dim objModuleController As New ModuleController
+            'Dim settings As Hashtable = objModuleController.GetModuleSettings(moduleID)
+            Dim settings As Hashtable = ModuleController.Instance.GetModule(moduleID, -1, False).ModuleSettings
 
             Dim currency As String = ""
             If (settings.Contains(Constants.CURRENCY)) Then
@@ -343,7 +350,8 @@ Namespace Ventrian.SubscriptionTools.Tools
             invoice = invoice.Replace("[SUBSCRIPTIONPRICE]", symbol & objReceipt.ServiceFee.ToString("##0.00"))
             invoice = invoice.Replace("[USERNAME]", objUser.Username)
 
-            Dim sendTo As String = objUser.Membership.Email
+            'Dim sendTo As String = objUser.Membership.Email
+            Dim sendTo As String = objUser.Email
             Dim sendFrom As String = PortalSettings.Email
 
             Dim emailSubject As String = PortalSettings.PortalName & " Subscription Invoice"
